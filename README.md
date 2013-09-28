@@ -8,8 +8,6 @@ Configuration
 
 Unfortunately, quite a bunch of settings. Indexes are zero based.
 
-`startTime` the time to start each simplified day with - in format `hh:mm'.
-
 `templateExcelFilename`: Path to file to use as template. Example: `"C:/Users/PowPow/Desktop/Excel_template.xlsx"`
 
 `outputExcelFilename`: Path to write the resulting excel file to. Example: `"C:/Users/PowPow/Desktop/Excel_current.xlsx"`
