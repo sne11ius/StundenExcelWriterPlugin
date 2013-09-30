@@ -39,6 +39,7 @@ public class StundenExcelWriter implements OutputPlugin {
 			throw new InvalidConfigurationException("Configuration null or wrong type. You probably need to fix your configuration file.");
 		}
 		final StundenExcelWriterConfiguration myConfig = (StundenExcelWriterConfiguration) configuration;
+		LOG.debug("Travel detection " + (myConfig.getDoTravelDetection() ? "en" : "dis") + "abled."); 
 		travelDetector = new TravelDetector(myConfig.getTravelArrivalIndicators(), myConfig.getTravelDepartureIndicators());
 		try {
 			fillExcelFile(workPeriod, myConfig);
@@ -69,18 +70,20 @@ public class StundenExcelWriter implements OutputPlugin {
 	private void enterRowData(final XSSFRow row, final Day day, final StundenExcelWriterConfiguration myConfig) {
 		row.getCell(myConfig.getDateCol()).setCellValue(DateUtils.DATE_FORMATTER_SHORT.print(day.getDate()));
 		final TravelDetectionResult detectionResult = travelDetector.detectTravel(day);
-		if (detectionResult.isTravelDetected()) {
-			LOG.debug("Travel detected for " + DateUtils.DATE_FORMATTER.print(day.getDate()));
-			row.getCell(myConfig.getStartArrivalCol()).setCellValue(DateUtils.TIME_FORMATTER.print(detectionResult.getArrival().getBegin()));
-			row.getCell(myConfig.getEndArrivalCol()).setCellValue(DateUtils.TIME_FORMATTER.print(detectionResult.getArrival().getEnd()));
-			row.getCell(myConfig.getStartDepartureCol()).setCellValue(DateUtils.TIME_FORMATTER.print(detectionResult.getDeparture().getBegin()));
-			row.getCell(myConfig.getEndDepartureCol()).setCellValue(DateUtils.TIME_FORMATTER.print(detectionResult.getDeparture().getEnd()));
+		if (myConfig.getDoTravelDetection()) {
+			if (detectionResult.isTravelDetected()) {
+				LOG.debug("Travel detected for " + DateUtils.DATE_FORMATTER.print(day.getDate()));
+				row.getCell(myConfig.getStartArrivalCol()).setCellValue(DateUtils.TIME_FORMATTER.print(detectionResult.getArrival().getBegin()));
+				row.getCell(myConfig.getEndArrivalCol()).setCellValue(DateUtils.TIME_FORMATTER.print(detectionResult.getArrival().getEnd()));
+				row.getCell(myConfig.getStartDepartureCol()).setCellValue(DateUtils.TIME_FORMATTER.print(detectionResult.getDeparture().getBegin()));
+				row.getCell(myConfig.getEndDepartureCol()).setCellValue(DateUtils.TIME_FORMATTER.print(detectionResult.getDeparture().getEnd()));
+			}
 		}
 		final StringBuilder descriptionBuilder = new StringBuilder(200);
 		Duration totalWorkDuration = new Duration(0);
 		Entry firstEntry = null;
 		for (final Entry entry : day.getEntries()) {
-			if (detectionResult.isTravelDetected() && (detectionResult.getArrival() == entry || detectionResult.getDeparture() == entry)) {
+			if (myConfig.getDoTravelDetection() && detectionResult.isTravelDetected() && (detectionResult.getArrival() == entry || detectionResult.getDeparture() == entry)) {
 				// this entry is already covered by travel
 				continue;
 			}

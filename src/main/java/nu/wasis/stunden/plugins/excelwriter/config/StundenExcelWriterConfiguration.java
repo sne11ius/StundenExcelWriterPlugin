@@ -8,6 +8,7 @@ public class StundenExcelWriterConfiguration {
 	private String templateExcelFilename;
 	private String outputExcelFilename;
 	private Set<String> tags;
+	private boolean doTravelDetection;
 	private List<String> travelArrivalIndicators;
 	private List<String> travelDepartureIndicators;
 	private int autoBreakBonus;
@@ -31,6 +32,10 @@ public class StundenExcelWriterConfiguration {
 	
 	public Set<String> getTags() {
 		return tags;
+	}
+	
+	public boolean getDoTravelDetection() {
+		return doTravelDetection;
 	}
 
 	public List<String> getTravelArrivalIndicators() {
