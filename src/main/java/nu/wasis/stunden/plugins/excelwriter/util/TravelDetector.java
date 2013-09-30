@@ -2,12 +2,14 @@ package nu.wasis.stunden.plugins.excelwriter.util;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import nu.wasis.stunden.model.Day;
 import nu.wasis.stunden.model.Entry;
 
 public class TravelDetector {
 
-//	private static final Logger LOG = Logger.getLogger(TravelDetector.class);
+	private static final Logger LOG = Logger.getLogger(TravelDetector.class);
 	
 	private final List<String> arrivalIndicators;
 	private final List<String> departureIndicators;
@@ -32,6 +34,12 @@ public class TravelDetector {
 			}
 		}
 		final boolean travelDetected = null != arrival && null != departure;
+		if (null == arrival && null != departure) {
+			LOG.warn("no arrival, but departure: " + day);
+		}
+		if (null != arrival && null == departure) {
+			LOG.warn("arrival, but no departure: " + day);
+		}
 		return new TravelDetectionResult(arrival, departure, travelDetected);
 	}
 

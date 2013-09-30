@@ -11,7 +11,7 @@ public class StringUtils {
 
 	public static boolean containsAny(final String projectName, final List<String> indicators) {
 		for (final String indicator : indicators) {
-			if (projectName.toLowerCase().contains(indicator.toLowerCase())) {
+			if (projectName.toLowerCase().startsWith(indicator.toLowerCase())) {
 				return true;
 			}
 		}
