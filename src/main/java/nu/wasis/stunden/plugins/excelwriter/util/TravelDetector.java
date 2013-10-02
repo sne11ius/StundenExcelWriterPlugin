@@ -2,10 +2,10 @@ package nu.wasis.stunden.plugins.excelwriter.util;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import nu.wasis.stunden.model.Day;
 import nu.wasis.stunden.model.Entry;
+
+import org.apache.log4j.Logger;
 
 public class TravelDetector {
 
